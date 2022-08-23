@@ -70,4 +70,24 @@ import { _ } from './__fixtures__';
     expectType<FieldError | undefined>(actual.record?.file);
     expectType<FieldError | undefined>(actual.record?.fileList);
   }
+
+  /** it should support union types */
+  {
+    const actual = _ as FieldErrors<{
+      always?: string;
+      union:
+        | {
+            data: 'A';
+            data1: string;
+          }
+        | {
+            data: 'B';
+            data2: string;
+          };
+    }>;
+    expectType<FieldError | undefined>(actual.always);
+    expectType<FieldError | undefined>(actual.union?.data);
+    expectType<FieldError | undefined>(actual.union?.data1);
+    expectType<FieldError | undefined>(actual.union?.data2);
+  }
 }

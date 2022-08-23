@@ -1,5 +1,5 @@
 import { FieldValues, InternalFieldName, Ref } from './fields';
-import { BrowserNativeObject, LiteralUnion, Merge } from './utils';
+import { BrowserNativeObject, KeysOfUnion, LiteralUnion, Merge } from './utils';
 import { RegisterOptions, ValidateResult } from './validator';
 
 export type Message = string;
@@ -31,7 +31,7 @@ export type DeepRequired<T> = T extends BrowserNativeObject | Blob
     };
 
 export type FieldErrorsImpl<T extends FieldValues = FieldValues> = {
-  [K in keyof T]?: T[K] extends BrowserNativeObject | Blob
+  [K in KeysOfUnion<T>]?: T[K] extends BrowserNativeObject | Blob
     ? FieldError
     : T[K] extends object
     ? Merge<FieldError, FieldErrorsImpl<T[K]>>

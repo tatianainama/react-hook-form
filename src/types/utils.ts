@@ -74,6 +74,12 @@ export type IsAny<T> = 0 extends 1 & T ? true : false;
  */
 export type IsNever<T> = [T] extends [never] ? true : false;
 
+/**
+ * Distributes keys in union
+ * See {@link https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#distributive-conditional-types}
+ */
+export type KeysOfUnion<T> = T extends T ? keyof T : never;
+
 export type DeepMap<T, TValue> = IsAny<T> extends true
   ? any
   : T extends BrowserNativeObject | NestedValue
