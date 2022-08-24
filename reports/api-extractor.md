@@ -116,9 +116,11 @@ export type CustomElement<TFieldValues extends FieldValues> = {
     focus?: Noop;
 };
 
+// Warning: (ae-forgotten-export) The symbol "UnionToIntersection" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
-export type DeepMap<T, TValue> = IsAny<T> extends true ? any : T extends BrowserNativeObject | NestedValue ? TValue : T extends object ? {
-    [K in keyof T]: DeepMap<NonUndefined<T[K]>, TValue>;
+export type DeepMap<T, TValue> = IsAny<T> extends true ? any : [T] extends [BrowserNativeObject | NestedValue] ? TValue : [T] extends [object] ? {
+    [K in keyof UnionToIntersection<T>]: DeepMap<NonUndefined<UnionToIntersection<T>[K]>, TValue>;
 } : TValue;
 
 // @public (undocumented)
@@ -205,7 +207,7 @@ export type FieldErrors<T extends FieldValues = FieldValues> = FieldErrorsImpl<D
 
 // @public (undocumented)
 export type FieldErrorsImpl<T extends FieldValues = FieldValues> = {
-    [K in keyof T]?: T[K] extends BrowserNativeObject | Blob ? FieldError : T[K] extends object ? Merge<FieldError, FieldErrorsImpl<T[K]>> : FieldError;
+    [K in KeysOfUnion<T>]?: T[K] extends BrowserNativeObject | Blob ? FieldError : T[K] extends object ? Merge<FieldError, FieldErrorsImpl<T[K]>> : FieldError;
 };
 
 // @public (undocumented)
@@ -309,6 +311,9 @@ export type KeepStateOptions = Partial<{
     keepIsValid: boolean;
     keepSubmitCount: boolean;
 }>;
+
+// @public
+export type KeysOfUnion<T> = T extends T ? keyof T : never;
 
 // @public (undocumented)
 export type LiteralUnion<T extends U, U extends Primitive> = T | (U & {
